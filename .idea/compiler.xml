@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="tiny-spring-step1" />
         <module name="tiny-spring-step2" />
+        <module name="tiny-spring-step3" />
       </profile>
     </annotationProcessing>
   </component>
