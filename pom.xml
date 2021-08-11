@@ -10,6 +10,7 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>tiny-spring-step1</module>
+        <module>tiny-spring-step2</module>
     </modules>
 
     <dependencies>
