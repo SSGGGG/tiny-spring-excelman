@@ -1,6 +1,6 @@
-package config;
+package com.excelman.beans.factory.config;
 
-import beans.PropertyValues;
+import com.excelman.beans.PropertyValues;
 
 /**
  * @author SENSETIME\xuxuangan

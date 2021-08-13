@@ -1,0 +1,29 @@
+# 一、目标
+至此，我们已经实现了自定义bean的注册以及使用，并且支持带有构造函数以及注入属性的bean。
+但是，目前bean的定义（设置属性）和注册仍是我们程序员在代码中写好的。这一章节的目标就是让这一部分的操作，放到配置文件中进行处理。
+
+- 需要将bean的属性定义以及注册操作放到xml文件中，通过配置文件的方式将对象实例化
+- 接下来的任务：解决Spring配置文件的读取、解析、注册bean
+
+# 二、设计
+首先，我们需要添加一个资源解析器，就是能读取classpath、本地以及云上面的配置内容，并且在读取信息后，对配置文件中的bean进行解析以及注册。
+其中资源解析器由加载器+解析器组成。
+
+- 资源解析器是独立的部分，位于Spring框架核心包的IO实现内容；
+- 当资源加载后，接下来的解析和注册bean需要和`DefaultListableBeanFactory`核心类结合（因为这个类的职责就是注册和加载bean的定义）；
+- 在实现的时候需要设计好接口的实现层级关系，包括我们需要定义Bean定义的读取接口`BeanDefinitionReader`以及对应的实现类，在实现类中完成对bean对象的解析和注册；
+
+# 三、实现
+容器资源的加载和使用类的实现如下：
+- 实现两大块内容：资源加载器、xml资源处理类。其中资源加载器的过程主要以实现接口Resource和ResourceLoader来完成，ResourceLoader依赖Resource接口，目的是获取对应文件的输入流。而资源处理类则是由BeanDefinitionReader接口来定义，由实现类来具体实现，目的是根据输入流读取配置文件，将配置信息注册到Spring容器中；
+- 在资源加载器中，Resource接口有三个实现类，分别是Classpath、系统文件和云配置文件，这三部分和源码中的设计保持一致，最终由ResourceLoader的实现类所封装依赖调用；
+- 资源处理器中，接口：BeanDefinitionReader、抽象类：AbstractBeanDefinitionReader、实现类：XmlBeanDefinitionReader，这三部分主要是合理清晰的处理了资源读取后的注册bean容器操作。接口负责定义，抽象类负责处理非接口功能外的注册bean组件填充，最终实现类即可只关心具体的业务实现；
+
+另外本章节还参考Spring源码，做了相应接口的集成和实现的关系，虽然目前这些接口还没有太大的作用，但是随着框架的逐步完善，它们会发挥作用。
+- BeanFactory：已经存在的Bean工厂接口用于获取Bean对象，这次新增了按照类型获取Bean的方法：`<T> T getBean(String name, Class<T> requiredType)`
+- ListableBeanFactory：是一个扩展Bean工厂接口的接口，新增加了`getBeansOfType`、`getBeanDefinitionNames`方法，在源码中还有其他的扩展方法
+- HierarchicalBeanFactory：在源码中它提供了可与获取父类BeanFactory方法，属于一种扩展工厂的层次子接口
+- AutowireCapableBeanFactory：是一个自动化处理Bean工厂配置的接口，目前还没有做相应的实现，后续逐步完善
+- ConfigurableBeanFactory：可获取BeanPostProcessor、BeanClassLoader等的一个配置化接口
+- ConfigurableListableBeanFactory：提供分析和修改Bean以及预先实例化的操作接口，不过目前只有一个getBeanDefinition方法
+

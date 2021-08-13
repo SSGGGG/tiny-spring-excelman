@@ -1,10 +1,9 @@
-import bean.PropertyValue;
-import bean.PropertyValues;
+import beans.PropertyValue;
+import beans.PropertyValues;
 import config.BeanDefinition;
 import config.BeanReference;
 import dao.UserDao;
 import service.UserService;
-import support.AbstractAutowireCapableBeanFactory;
 import support.DefaultListableBeanFactory;
 
 /**

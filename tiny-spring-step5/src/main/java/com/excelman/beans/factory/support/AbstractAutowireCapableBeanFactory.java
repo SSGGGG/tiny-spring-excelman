@@ -1,12 +1,10 @@
-package support;
+package com.excelman.beans.factory.support;
 
-import beans.PropertyValue;
-import beans.PropertyValues;
+import com.excelman.beans.PropertyValue;
+import com.excelman.beans.PropertyValues;
 import cn.hutool.core.bean.BeanUtil;
-import config.BeanDefinition;
-import config.BeanReference;
-import com.excelman.beans.factory.support.strategy.CglibSubclassingInstantiationStrategy;
-import com.excelman.beans.factory.support.strategy.InstantiationStrategy;
+import com.excelman.beans.factory.config.BeanDefinition;
+import com.excelman.beans.factory.config.BeanReference;
 
 import java.lang.reflect.Constructor;
 
@@ -14,7 +12,7 @@ import java.lang.reflect.Constructor;
  * @author SENSETIME\xuxuangan
  * @version 1.0
  * @date 2021/8/11 下午4:02
- * 这个抽象类只负责createBean的实现
+ * 这个抽象类负责创建bean
  */
 public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory{
 

@@ -1,4 +1,4 @@
-import bean.UserService;
+import beans.UserService;
 import config.BeanDefinition;
 import org.junit.Test;
 import support.DefaultListableBeanFactory;

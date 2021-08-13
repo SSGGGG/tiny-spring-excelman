@@ -1,8 +1,8 @@
 package support;
 
 import config.BeanDefinition;
-import strategy.CglibSubclassingInstantiationStrategy;
-import strategy.InstantiationStrategy;
+import com.excelman.beans.factory.support.strategy.CglibSubclassingInstantiationStrategy;
+import com.excelman.beans.factory.support.strategy.InstantiationStrategy;
 
 import java.lang.reflect.Constructor;
 
