@@ -1,8 +1,8 @@
 package com.excelman.test;
 
 import cn.hutool.core.io.IoUtil;
-import com.excelman.beans.factory.xml.XmlBeanDefinitionReader;
 import com.excelman.test.bean.UserService;
+import com.excelman.beans.factory.xml.XmlBeanDefinitionReader;
 import com.excelman.core.io.DefaultResourceLoader;
 import com.excelman.core.io.Resource;
 import org.junit.Before;

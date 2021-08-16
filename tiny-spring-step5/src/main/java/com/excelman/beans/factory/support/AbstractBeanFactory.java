@@ -1,8 +1,8 @@
 package com.excelman.beans.factory.support;
 
 import com.excelman.beans.BeansException;
-import com.excelman.beans.factory.config.BeanDefinition;
 import com.excelman.beans.factory.BeanFactory;
+import com.excelman.beans.factory.config.BeanDefinition;
 
 /**
  * @author SENSETIME\xuxuangan

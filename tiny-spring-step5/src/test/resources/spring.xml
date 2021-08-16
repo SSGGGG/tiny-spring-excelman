@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
 
-    <bean id="userDao" class="com.excelman.test.bean.UserDao"/>
+    <com.excelman.test.bean id="userDao" class="com.excelman.test.test.UserDao"/>
 
-    <bean id="userService" class="com.excelman.test.bean.UserService">
+    <com.excelman.test.bean id="userService" class="com.excelman.test.test.UserService">
         <property name="uid" value="uid1" />
         <property name="userDao" ref="userDao" />
-    </bean>
+    </com.excelman.test.bean>
 
 </beans>

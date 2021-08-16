@@ -2,12 +2,12 @@ package com.excelman.beans.factory.xml;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.XmlUtil;
-import com.excelman.beans.factory.support.AbstractBeanDefinitionReader;
-import com.excelman.beans.PropertyValue;
 import com.excelman.beans.factory.config.BeanDefinition;
+import com.excelman.beans.factory.support.AbstractBeanDefinitionReader;
+import com.excelman.core.io.Resource;
+import com.excelman.beans.PropertyValue;
 import com.excelman.beans.factory.config.BeanReference;
 import com.excelman.beans.factory.support.BeanDefinitionRegistry;
-import com.excelman.core.io.Resource;
 import com.excelman.core.io.ResourceLoader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -56,6 +56,13 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
         loadBeanDefinitions(resource);
     }
 
+    @Override
+    public void loadBeanDefinitions(String... locations){
+        for(String location : locations){
+            loadBeanDefinitions(location);
+        }
+    }
+
     protected void doLoadBeanDefinitions(InputStream inputStream) throws ClassNotFoundException {
         Document doc = XmlUtil.readXML(inputStream);
         Element root = doc.getDocumentElement();
@@ -65,7 +72,7 @@ public class XmlBeanDefinitionReader extends AbstractBeanDefinitionReader {
             // 判断元素
             if (!(childNodes.item(i) instanceof Element)) continue;
             // 判断对象
-            if (!"com.excelman.test.bean".equals(childNodes.item(i).getNodeName())) continue;
+            if (!"bean".equals(childNodes.item(i).getNodeName())) continue;
 
             // 解析标签
             Element bean = (Element) childNodes.item(i);

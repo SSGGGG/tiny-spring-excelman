@@ -1,7 +1,7 @@
 package com.excelman.beans.factory.config;
 
-import com.excelman.beans.factory.HierarchicalBeanFactory;
 import com.excelman.beans.factory.BeanFactory;
+import com.excelman.beans.factory.HierarchicalBeanFactory;
 
 /**
  * Configuration interface to be implemented by most com.excelman.test.bean factories. Provides
@@ -14,4 +14,6 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
     String SCOPE_SINGLETON = "singleton";
 
     String SCOPE_PROTOTYPE = "prototype";
+
+    void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
 }

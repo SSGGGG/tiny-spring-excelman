@@ -9,6 +9,7 @@
         <module name="tiny-spring-step1" />
         <module name="tiny-spring-step2" />
         <module name="tiny-spring-step5" />
+        <module name="tiny-spring-step6" />
         <module name="tiny-spring-step3" />
         <module name="tiny-spring-step4" />
       </profile>

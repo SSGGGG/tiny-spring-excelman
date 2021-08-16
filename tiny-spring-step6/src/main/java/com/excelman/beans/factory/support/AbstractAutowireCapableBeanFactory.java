@@ -1,10 +1,13 @@
 package com.excelman.beans.factory.support;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.excelman.beans.BeansException;
 import com.excelman.beans.PropertyValue;
 import com.excelman.beans.PropertyValues;
+import com.excelman.beans.factory.config.AutowireCapableBeanFactory;
 import com.excelman.beans.factory.config.BeanDefinition;
+import com.excelman.beans.factory.config.BeanPostProcessor;
 import com.excelman.beans.factory.config.BeanReference;
-import cn.hutool.core.bean.BeanUtil;
 
 import java.lang.reflect.Constructor;
 
@@ -14,7 +17,7 @@ import java.lang.reflect.Constructor;
  * @date 2021/8/11 下午4:02
  * 这个抽象类负责创建bean
  */
-public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory{
+public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFactory implements AutowireCapableBeanFactory {
 
     /**
      * 注入实例化的策略
@@ -25,7 +28,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      * 创建bean方法的实现：
      * 1. 首先由bean的定义，获取bean对应的class，并进行实例化
      * 2. 给bean填充属性
-     * 3. 接着调用单例bean的addSingleton方法，将当前的bean添加到单例对象的缓存中
+     * 3. step6新增的：调用初始化方法，执行BeanPostProcessor的前置和后置处理
+     * 4. 接着调用单例bean的addSingleton方法，将当前的bean添加到单例对象的缓存中
      */
     @Override
     protected Object createBean(String beanName, BeanDefinition beanDefinition, Object[] args) {
@@ -35,6 +39,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             bean = createBeanInstance(beanDefinition,beanName,args);
             // 给bean填充属性
             applyPropertyValues(beanName,bean,beanDefinition);
+            // 执行bean的初始化方法和BeanPostProcessor的前置和后置处理方法
+            bean = initializeBean(beanName, bean, beanDefinition);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -88,6 +94,59 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 执行初始化bean，调用BeanPostProcessor Before和After进行初始化的前后置处理
+     * @param beanName
+     * @param bean
+     * @param beanDefinition
+     * @return
+     */
+    private Object initializeBean(String beanName, Object bean, BeanDefinition beanDefinition){
+        // 1.执行BeanPostProcessor Before处理
+        Object wrappedBean = applyBeanPostProcessorsBeforeInitialization(bean,beanName);
+
+        // 2.待完成内容：invokeInitMethods
+        invokeInitMethods(beanName, wrappedBean, beanDefinition);
+
+        // 3.执行BeanPostProcessor After处理
+        wrappedBean = applyBeanPostProcessorsAfterInitialization(bean,beanName);
+        return wrappedBean;
+    }
+
+    private void invokeInitMethods(String beanName, Object wrappedBean, BeanDefinition beanDefinition) {
+
+    }
+
+    /**
+     * 初始化前置处理
+     */
+    @Override
+    public Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName) throws BeansException {
+        Object result = existingBean;
+        // 遍历所有的前置处理并执行
+        for(BeanPostProcessor processor : getBeanPostProcessorList()){
+            Object current = processor.postProcessBeforeInitialization(result,beanName);
+            if(null == current) return result;
+            result = current;
+        }
+        return result;
+    }
+
+    /**
+     * 初始化后置处理
+     */
+    @Override
+    public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName) throws BeansException {
+        Object result = existingBean;
+        // 遍历所有的后置处理并执行
+        for(BeanPostProcessor processor : getBeanPostProcessorList()){
+            Object current = processor.postProcessAfterInitialization(result,beanName);
+            if(null == current) return result;
+            result = current;
+        }
+        return result;
     }
 
     /**

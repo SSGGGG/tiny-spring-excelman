@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+
+    <bean id="userDao" class="com.excelman.test.bean.UserDao"/>
+
+    <bean id="userService" class="com.excelman.test.bean.UserService">
+        <property name="uid" value="uid1"/>
+        <property name="company" value="无"/>
+        <property name="location" value="北京"/>
+        <property name="userDao" ref="userDao"/>
+    </bean>
+
+</beans>
+
