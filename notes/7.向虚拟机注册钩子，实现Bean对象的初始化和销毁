@@ -1,0 +1,23 @@
+# 一、目标
+本章节希望可以在Bean初始化过程，执行一些操作。比如帮我们做一些数据的加载执行，链接注册中心暴露RPC接口以及在Web程序关闭时执行链接断开，内存销毁等操作。
+
+如果说没有Spring我们也可以通过构造函数、静态方法以及手动调用的方式实现，但是这样的处理方式终究没有把诸如此类的操作都交给Spring容器来管理比较合适。
+
+- 需要满足用户可以在xml中配置初始化和销毁的方法，也可以通过实现类的方式处理，就像Spring本身提供的InitializingBean和DisposableBean两个接口。
+- 其实还可以是采用注解的方式来处理初始化操作，这个后续再继续完善；
+
+# 二、设计
+首先，对于这种在Bean容器初始化过程中额外添加的处理操作，无非就是预先执行一个定义好的接口方法或者是反射调用类中xml配置的方法，最终只要按照接口定义实现，就会有Spring容器在处理的过程中进行调用。
+
+- 在spring.xml配置中添加init-method、destroy-method两个注解，在配置文件加载的过程中，把注解配置一并注册到BeanDefinition的属性当中。这样在initializeBean初始化操作的过程中，就可以通过反射的方式来调用配置在Bean属性中的方法信息了。不过如果是接口实现的方式，则可以直接通过Bean对象调用对应接口定义的方法即可；
+- 除了在初始化做的操作外，destroy-method和DisposableBean接口的定义，都会在Bean对象初始化完成阶段，执行注册销毁方法的信息到DefaultSingletonBeanRegistry类中的disposableBeans属性里，为了后续统一进行操作；
+- 这里还需要使用适配器模式，因为反射调用和接口直接调用，是两种方式。所以需要使用适配器进行包装，参考DisposableBeanAdapter的具体实现；
+- 关于销毁方法需要在虚拟机执行关闭之前进行操作，所以这里需要用到一个注册钩子的操作，如：`Runtime.getRuntime().addShutdownHook(new Thread(() -> sout("close")));`，另外也可以使用手动调用ApplicationContext.close方法关闭容器；
+
+# 三、实现
+整体的实现围绕着类AbstractAutowireCapableBeanFactory，因为这个类的职责就是createBean。
+- 定义两个接口，分别对应初始化和销毁，因为我们实现了两种方式，xml配置和定义接口，所以这里也需要XMLBeanDefinitionReader来加载spring.xml配置信息到BeanDefinition中；
+- 另外接口ConfigurableBeanFactory(AbstractBeanFactory实现的接口)定义了destroySingletons销毁方法，并且由AbstractBeanFactory继承的父类DefaultSingletonBeanRegistry实现，而不是直接由AbstractBeanFactory实现；
+- 上面的这种实现方式是一种不错的隔离分层服务的设计方式
+- 最后就是关于向虚拟机注册钩子，保证在虚拟机关闭之前，执行销毁操作；
+
