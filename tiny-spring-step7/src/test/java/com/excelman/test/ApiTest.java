@@ -1,7 +1,6 @@
 package com.excelman.test;
 
 import com.excelman.context.support.ClassPathXmlApplicationContext;
-import com.excelman.test.bean.UserService;
 import org.junit.Test;
 
 /**

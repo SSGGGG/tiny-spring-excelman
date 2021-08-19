@@ -2,7 +2,6 @@ package com.excelman.test;
 
 import com.excelman.context.support.ClassPathXmlApplicationContext;
 import com.excelman.test.common.MyBeanPostProcessor;
-import com.excelman.test.bean.UserService;
 import com.excelman.beans.factory.support.DefaultListableBeanFactory;
 import com.excelman.beans.factory.xml.XmlBeanDefinitionReader;
 import com.excelman.test.common.MyBeanFactoryPostProcessor;

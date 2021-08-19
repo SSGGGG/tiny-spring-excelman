@@ -1,7 +1,7 @@
 package com.excelman.test.common;
 
 import com.excelman.beans.factory.config.BeanPostProcessor;
-import com.excelman.test.bean.UserService;
+import com.excelman.test.UserService;
 import com.excelman.beans.BeansException;
 
 /**

@@ -1,0 +1,25 @@
+# 一、目标
+首先本章节要实现Bean对象的多个作用域，包括单例和原型模式。
+
+其次，我们在使用Spring整合MyBatis的时候都知道，我们没有手动地创建任何操作数据库的Bean对象，有的仅仅是一个接口定义，而这个接口定义竟然可以被注入到其他需要使用Dao的属性中区。
+
+那么这一过程最核心待解决的问题，就是需要完成把复杂且以代理方式动态变化的对象，注册到Sprign容器中。
+
+为了满足这样的一个扩展组件开发的需求，就需要我们在现有手写的Spring框架中，添加这一能力。
+
+# 二、设计
+整个Spring框架在开发的过程中就已经提供了各项扩展能力的接茬，我们只需要在合适的位置提供一个接茬的处理接口调用和相应的功能逻辑实现即可。
+
+像这里的目标实现就是对外提供一个可以二次从FactoryBean的getObject方法中获取对象的功能即可，这样所有实现此接口的对象类，就可以扩充自己的对象功能了。
+
+MyBatis就是实现了一个MapperFactoryBean类，在getObject方法中提供SqlSession对执行CURD方法的操作。
+
+- 整个实现过程包括了两部分：一个是解决单例还是原型对象；另外一个处理FactoryBean类型对象创建过程中关于获取具体调用对象的getObject操作。
+- SCOPE_SINGLETON、SCOPE_PROTOTYPE，对象类型的创建获取方式，主要区分在于createBean创建完成对象后是否放入内存中
+- createBean在经过一系列操作后，就要开始做执行判断整个对象是否是一个FactoryBean对象，如果是的话，就需要再继续执行获取FactoryBean具体对象中的getObject对象了。
+- getBena过程中都会新增一个单例类型的判断factory.isSingleton()，用于决定是否使用内存存放对象信息
+
+# 三、实现
+
+- 整个实现过程并不复杂，只是在现有的AbstractAutowireCapableBeanFactory类以及继承的抽象类AbstractBeanFactory中进行扩展
+- 在AbstractBeanFactory继承的DefaultSingletonBeanRegistry类中间，加了一层   FactoryBeanRegistrySupport，这个类在Spring框架中主要是处理关于FactoryBean注册的支撑操作
