@@ -23,6 +23,8 @@ import java.util.Set;
 /**
  * 该类的职责：
  * 负责通用方法（添加和删除监听器）的处理，以及添加getApplicationListeners和supportsEvent的方法处理
+ *
+ * 接口定义的具体发布事件multicastEvent()方法，由继承的类实现，在该方法中，调用本类实现的getApplicationListeners方法获取event对应的监听器，并调用监听器的处理事件方法
  */
 public abstract class AbstractApplicationEventMulticaster implements ApplicationEventMulticaster, BeanFactoryAware {
 
