@@ -18,6 +18,7 @@
         <module>tiny-spring-step7</module>
         <module>tiny-spring-step8</module>
         <module>tiny-spring-step9</module>
+        <module>tiny-spring-step10</module>
     </modules>
 
     <dependencies>
