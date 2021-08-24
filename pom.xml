@@ -20,6 +20,7 @@
         <module>tiny-spring-step9</module>
         <module>tiny-spring-step10</module>
         <module>tiny-spring-step11</module>
+        <module>tiny-spring-step12</module>
     </modules>
 
     <dependencies>

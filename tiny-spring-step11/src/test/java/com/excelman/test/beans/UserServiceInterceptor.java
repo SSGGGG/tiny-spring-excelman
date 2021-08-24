@@ -14,6 +14,9 @@ import org.aopalliance.intercept.MethodInvocation;
  * 实现invoke方法，在该方法中，对invocation.proceed()方法放行，并在finally中添加监控信息
  */
 public class UserServiceInterceptor implements MethodInterceptor {
+    /**
+     * 这里的invocation是封装了support信息的MethodInvocation实现类
+     */
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
         long start = System.currentTimeMillis();

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<beans>
+
+    <bean id="userService" class="com.excelman.test.beans.UserService"/>
+
+    <!-- 自动代理类：实现了BeanPostProcessor接口，因此在context的refresh中，就被添加到BeanFactory的BeanPostProcessor中 -->
+    <bean class="com.excelman.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
+
+    <!-- 具体的实现通知 -->
+    <bean id="beforeAdvice" class="com.excelman.test.beans.UserServiceBeforeAdvice"/>
+
+    <!-- 方法切面拦截器，依赖具体的通知 -->
+    <bean id="methodInterceptor" class="com.excelman.aop.framework.adapter.MethodBeforeAdviceInterceptor">
+        <property name="advice" ref="beforeAdvice"/>
+    </bean>
+
+    <!-- Advisor包装expression和切面通知(即拦截器方法) -->
+    <bean id="pointcutAdvisor" class="com.excelman.aop.aspectj.AspectJExpressionPointcutAdvisor">
+        <property name="expression" value="execution(* com.excelman.test.beans.IUserService.*(..))"/>
+        <property name="advice" ref="methodInterceptor"/>
+    </bean>
+
+</beans>
