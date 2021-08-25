@@ -1,0 +1,21 @@
+# 一、目标
+到本章节我们已经把关于IOC和AOP的全部核心内容实现完成了，只不过在使用的时候有点像早期的Spring版本，需要一个个在spring.xml中进行配置。
+
+这其中就包括：包的扫描注册、注解配置的使用、占位符属性的填充等等，而我们的目标就是在目前的核心逻辑上填充一些自动化的功能。
+
+从而从中学习到这部分的设计和实现，体会到一些关于代码逻辑的实现过程，总结一些编码经验。
+# 二、设计
+首先考虑，为了可以简化Bean对象的配置，让整个Bean对象的注册都是自动扫描的，那么基本需要的元素包括：
+扫描路径入口、XML解析扫描信息、给需要扫描的Bean对象做注解标记、扫描Class对象摘取Bean注册的基本信息，组装注册信息，注册成为Bean对象。
+
+在这些条件元素的支撑下，就可以实现处通过自定义注解和配置扫描路径的情况下，完成Bean对象的注册。
+
+结合Bean的生命周期，包扫描就是在XmlBeanDefinitionReader中解析`<context:component-scan />`标签，扫描特定注解的类，将类组装BeanDefinition注册到容器中，这个操作在ClassPathBeanDefinitionScanner#doScan方法中实现。
+
+除此之外再顺带解决一个配置中占位符属性的知识点，比如可以通过`${token}`给Bean对象注入属性信息，那么这个操作需要用到BeanFactoryPostProcessor。
+因为它可以处理在BeanDefinition加载完成后，实例化Bean对象之前，提供修改BeanDefinition属性的机制。
+# 三、实现
+- 首先xml解析类XMLBeanDefinitionReader依赖ClassPathScanningCandidateComponentProvider类，而该类由ClassPathBeanDefinitionScanner类继承
+- xml解析类对ClassPathBeanDefinitionScanner#doScan方法使用
+- 在doScan方法中处理所有指定路径下添加了注解的类，拆解出类的信息：名称、作用范围等，从而创建BeanDefinition并注册
+- 而BeanFactoryPostProcessor接口的实现类PropertyPlaceholderConfigurer目前是一个单独的内容，后续会与自动加载Bean对象进行整合，从而实现注解使用占位符配置属性信息

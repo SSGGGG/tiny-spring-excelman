@@ -1,4 +1,4 @@
-package com.excelman.test.bean;
+package com.excelman.test;
 
 import com.excelman.beans.factory.FactoryBean;
 

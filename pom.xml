@@ -21,6 +21,7 @@
         <module>tiny-spring-step10</module>
         <module>tiny-spring-step11</module>
         <module>tiny-spring-step12</module>
+        <module>tiny-spring-step13</module>
     </modules>
 
     <dependencies>
@@ -58,6 +59,12 @@
             <artifactId>junit</artifactId>
             <version>4.7</version>
             <scope>test</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.dom4j/dom4j -->
+        <dependency>
+            <groupId>org.dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>2.1.3</version>
         </dependency>
     </dependencies>
 

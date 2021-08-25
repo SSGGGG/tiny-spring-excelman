@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+   http://www.springframework.org/schema/context">
+
+    <!-- 从指定的配置文件中读取配置，包装到Properties类中 -->
+    <bean class="com.excelman.beans.factory.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:token.properties"/>
+    </bean>
+
+    <!-- 属性的value用${xxx}填写，由Spring从Properties中读取数据自动填充 -->
+    <bean id="userService" class="com.excelman.test.bean.UserService">
+        <property name="token" value="${token}"/>
+    </bean>
+
+</beans>

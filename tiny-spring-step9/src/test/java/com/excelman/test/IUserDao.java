@@ -1,4 +1,4 @@
-package com.excelman.test.bean;
+package com.excelman.test;
 
 /**
  * @author SENSETIME\xuxuangan
